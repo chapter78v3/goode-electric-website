@@ -1,0 +1,224 @@
+/* Goode Electric - Custom Styling */
+
+:root {
+    --primary-orange: #F59E0B;
+    --dark-orange: #D97706;
+    --warm-yellow: #FCD34D;
+    --light-warm: #FEF3C7;
+    --dark-gray: #1F2937;
+}
+
+* {
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #374151;
+}
+
+/* Navigation Styling */
+.navbar {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.navbar-brand:hover {
+    color: var(--warm-yellow) !important;
+}
+
+.nav-link {
+    font-weight: 700;
+    margin-left: 1rem;
+    font-size: 1.05rem;
+}
+
+.nav-link:hover {
+    color: var(--warm-yellow) !important;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-section h1 {
+    line-height: 1.2;
+}
+
+/* Service Cards */
+.service-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.service-card .btn-primary {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.service-card .btn-primary:hover {
+    background-color: var(--dark-orange);
+    border-color: var(--dark-orange);
+}
+
+/* Testimonial Cards */
+.testimonial-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid var(--primary-orange);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Primary Color Override */
+.bg-primary {
+    background-color: var(--primary-orange) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-orange);
+    border-color: var(--dark-orange);
+}
+
+.text-primary {
+    color: var(--primary-orange) !important;
+}
+
+.border-primary {
+    border-color: var(--primary-orange) !important;
+}
+
+/* Warning/Accent Colors */
+.text-warning {
+    color: var(--warm-yellow) !important;
+}
+
+.bg-warning {
+    background-color: var(--warm-yellow) !important;
+}
+
+/* Buttons */
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.btn-outline-light:hover {
+    background-color: white;
+    color: var(--primary-orange) !important;
+}
+
+/* Service Icon Large */
+.service-icon-large {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* Form Styling */
+.form-control,
+.form-control:focus {
+    border-color: #E5E7EB;
+}
+
+.form-control:focus {
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.form-label {
+    color: #374151;
+}
+
+/* Footer */
+footer {
+    background-color: #111827 !important;
+}
+
+footer a:hover {
+    color: var(--warm-yellow) !important;
+}
+
+/* Alert Styling */
+.alert-success {
+    background-color: #D1FAE5;
+    border-color: #6EE7B7;
+    color: #065F46;
+}
+
+.alert-danger {
+    background-color: #FEE2E2;
+    border-color: #FCA5A5;
+    color: #7F1D1D;
+}
+
+/* List Group */
+.list-group-item {
+    border-color: #E5E7EB;
+    background-color: #F9FAFB;
+}
+
+/* Cards */
+.card {
+    border-radius: 0.75rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 400px;
+    }
+
+    .display-4 {
+        font-size: 2.5rem;
+    }
+
+    .service-icon-large {
+        font-size: 3rem !important;
+    }
+}
+
+/* Accessibility */
+a:focus,
+button:focus {
+    outline: 2px solid var(--primary-orange);
+    outline-offset: 2px;
+}
+
+/* Loading State */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us - Goode Electric{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Contact Us</h1>
+        <p class="lead">Get in touch for a free electrical inspection or quote.</p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Info -->
+            <div class="col-lg-4">
+                <h3 class="fw-bold mb-4">Get In Touch</h3>
+                
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-2">
+                        <i class="fas fa-phone text-primary me-2"></i>Phone
+                    </h5>
+                    <p class="text-muted mb-0">
+                        <a href="tel:1-800-463-3335" class="text-decoration-none">(800) 463-3335</a>
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-2">
+                        <i class="fas fa-envelope text-primary me-2"></i>Email
+                    </h5>
+                    <p class="text-muted mb-0">
+                        <a href="mailto:contact@goodeelectric.com" class="text-decoration-none">contact@goodeelectric.com</a>
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-2">
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i>Service Area
+                    </h5>
+                    <p class="text-muted mb-0">Birmingham, AL Metro Area</p>
+                </div>
+
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-2">
+                        <i class="fas fa-clock text-primary me-2"></i>Hours
+                    </h5>
+                    <p class="text-muted mb-1">Mon - Fri: 7:00 AM - 5:00 PM</p>
+                    <p class="text-muted mb-0">Sat: 8:00 AM - 12:00 PM</p>
+                    <p class="text-muted mb-0"><em>24/7 Emergency Service</em></p>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-5">
+                        <h4 class="card-title fw-bold mb-4">Send us a Message</h4>
+                        
+                        <form id="contactForm">
+                            <div class="mb-4">
+                                <label for="name" class="form-label fw-bold">Full Name</label>
+                                <input type="text" class="form-control form-control-lg" id="name" name="name" required>
+                                <small class="text-danger" style="display: none;" id="nameError"></small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="email" class="form-label fw-bold">Email Address</label>
+                                <input type="email" class="form-control form-control-lg" id="email" name="email" required>
+                                <small class="text-danger" style="display: none;" id="emailError"></small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="phone" class="form-label fw-bold">Phone Number</label>
+                                <input type="tel" class="form-control form-control-lg" id="phone" name="phone" required>
+                                <small class="text-danger" style="display: none;" id="phoneError"></small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="subject" class="form-label fw-bold">Subject</label>
+                                <input type="text" class="form-control form-control-lg" id="subject" name="subject" required>
+                                <small class="text-danger" style="display: none;" id="subjectError"></small>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="message" class="form-label fw-bold">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                <small class="text-danger" style="display: none;" id="messageError"></small>
+                            </div>
+
+                            <div id="successMessage" class="alert alert-success" style="display: none;">
+                                Thank you! We've received your message and will contact you soon.
+                            </div>
+
+                            <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    // Clear previous messages
+    document.getElementById('successMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+    
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+    };
+    
+    try {
+        const response = await fetch('{{ url_for("main.contact") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('contactForm').reset();
+            
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            document.getElementById('errorMessage').textContent = data.error || 'Failed to send message. Please try again.';
+            document.getElementById('errorMessage').style.display = 'block';
+        }
+    } catch (error) {
+        document.getElementById('errorMessage').textContent = 'An error occurred. Please try again later.';
+        document.getElementById('errorMessage').style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Goode Electric - Professional Electrician Services{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section py-5 text-white" style="background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-3">Welcome to Goode Electric</h1>
+                <p class="lead mb-4">Professional electrical services for your home and business. Trusted by Birmingham residents for over 20 years.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-envelope me-2"></i>Get a Free Quote
+                    </a>
+                    <a href="{{ url_for('main.services') }}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-tools me-2"></i>Our Services
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-bolt" style="font-size: 150px; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Preview Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">Our Services</h2>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0 service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-wrench fa-3x mb-3 text-primary"></i>
+                        <h5 class="card-title">Maintenance & Repairs</h5>
+                        <p class="card-text text-muted">Troubleshooting, outlet repair, and breaker replacement to keep your system running safely.</p>
+                        <a href="{{ url_for('main.services') }}" class="btn btn-sm btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0 service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-lightbulb fa-3x mb-3 text-warning"></i>
+                        <h5 class="card-title">New Installations</h5>
+                        <p class="card-text text-muted">Smart lighting, EV chargers, ceiling fans, and modern electrical upgrades for your home.</p>
+                        <a href="{{ url_for('main.services') }}" class="btn btn-sm btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0 service-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shield-alt fa-3x mb-3 text-success"></i>
+                        <h5 class="card-title">Safety & Upgrades</h5>
+                        <p class="card-text text-muted">Panel upgrades, whole-house rewiring, and safety inspections for peace of mind.</p>
+                        <a href="{{ url_for('main.services') }}" class="btn btn-sm btn-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 fw-bold">What Our Customers Say</h2>
+        <div class="row g-4">
+            {% for testimonial in testimonials %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {% for i in range(testimonial.rating) %}
+                            <i class="fas fa-star text-warning"></i>
+                            {% endfor %}
+                        </div>
+                        <p class="card-text text-muted">{{ testimonial.text }}</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top">
+                        <p class="mb-0 fw-bold">{{ testimonial.name }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('main.testimonials') }}" class="btn btn-lg btn-outline-primary">
+                See All Reviews
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%); color: white;">
+    <div class="container text-center">
+        <h2 class="mb-3 fw-bold">Ready to Get Started?</h2>
+        <p class="lead mb-4">Contact us today for a free electrical inspection or quote on your next project.</p>
+        <a href="{{ url_for('main.contact') }}" class="btn btn-light btn-lg">
+            <i class="fas fa-phone me-2"></i>Contact Us Today
+        </a>
+    </div>
+</section>
+{% endblock %}
