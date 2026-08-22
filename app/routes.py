@@ -13,6 +13,11 @@ def index():
     featured_testimonials = TESTIMONIALS[:3]
     return render_template('index.html', testimonials=featured_testimonials)
 
+@main_bp.route('/about')
+def about():
+    """About page"""
+    return render_template('about.html')
+
 @main_bp.route('/services')
 def services():
     """Services page"""
