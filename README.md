@@ -43,7 +43,7 @@ goode-electric-website/
 - **Backend**: Flask 3.0.0 (Python web framework)
 - **Frontend**: HTML5, CSS3, Bootstrap 5, JavaScript
 - **Styling**: Bootstrap & custom CSS with warm color theme
-- **Email**: Flask-Mail for contact form submissions
+- **Email**: Azure Communication Services for contact form submissions
 - **Environment**: python-dotenv for configuration
 
 ## Installation & Setup
@@ -102,14 +102,11 @@ Create a `.env` file in the project root with the following environment variable
 FLASK_ENV=development
 SECRET_KEY=your-secret-key-here
 
-# Email Configuration (optional)
-MAIL_SERVER=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USE_TLS=True
-MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_DEFAULT_SENDER=noreply@goodeelectric.com
-RECIPIENT_EMAIL=contact@goodeelectric.com
+# Azure Communication Services (contact form email)
+ACS_CONNECTION_STRING=endpoint=https://<resource>.communication.azure.com/;accesskey=<key>
+ACS_SENDER_ADDRESS=noreply@mail.goode-electric.com
+RECIPIENT_EMAIL=shawn@goode-electric.com
+ACS_SEND_TIMEOUT=30
 
 # Google Maps API (optional, for future integration)
 MAPS_API_KEY=your-google-maps-api-key

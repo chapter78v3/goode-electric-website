@@ -6,13 +6,12 @@ load_dotenv()
 class Config:
     """Base configuration"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
-    MAIL_SERVER = os.environ.get('MAIL_SERVER')
-    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', True)
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@goodeelectric.com')
-    RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL', 'contact@goodeelectric.com')
+    # Azure Communication Services - transactional email for the contact form
+    ACS_CONNECTION_STRING = os.environ.get('ACS_CONNECTION_STRING')
+    ACS_SENDER_ADDRESS = os.environ.get('ACS_SENDER_ADDRESS', 'noreply@mail.goode-electric.com')
+    RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL', 'shawn@goode-electric.com')
+    # Seconds to wait for ACS to accept the message before giving up on the request
+    ACS_SEND_TIMEOUT = int(os.environ.get('ACS_SEND_TIMEOUT') or 30)
     MAPS_API_KEY = os.environ.get('MAPS_API_KEY')
 
 class DevelopmentConfig(Config):
@@ -29,7 +28,7 @@ class TestingConfig(Config):
     """Testing configuration"""
     DEBUG = True
     TESTING = True
-    MAIL_BACKEND = 'locmem'
+    ACS_CONNECTION_STRING = None
 
 config = {
     'development': DevelopmentConfig,
