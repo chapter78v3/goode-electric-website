@@ -9,11 +9,32 @@ from flask import g, render_template, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
+
+def client_ip():
+    """Rate-limit key: the caller's IP, without the source port.
+
+    App Service writes X-Forwarded-For as "<ip>:<port>", and the port is
+    different on every connection. Keying on that verbatim gives each
+    request its own bucket and the limit never triggers, so the port has
+    to be stripped here.
+    """
+    forwarded = request.headers.get('X-Forwarded-For', '')
+    if not forwarded:
+        return get_remote_address()
+
+    first = forwarded.split(',')[0].strip()
+    if first.startswith('['):           # [2001:db8::1]:443
+        return first.split(']')[0].lstrip('[')
+    if first.count(':') == 1:           # 203.0.113.9:51001
+        return first.rsplit(':', 1)[0]
+    return first                        # bare IPv4, or unbracketed IPv6
+
+
 # In-memory storage is per worker process. That is acceptable here because the
 # app runs as a single small instance; if it is ever scaled out or given more
 # gunicorn workers, point RATELIMIT_STORAGE_URI at Redis so the limit is shared.
 limiter = Limiter(
-    key_func=get_remote_address,
+    key_func=client_ip,
     default_limits=['200 per hour'],
     storage_uri='memory://',
     strategy='fixed-window',
