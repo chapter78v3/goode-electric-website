@@ -2,6 +2,7 @@
 import html
 from flask import Blueprint, render_template, request, jsonify, current_app
 from app.models import SERVICES, TESTIMONIALS, ContactForm
+from app.security import limiter
 
 main_bp = Blueprint('main', __name__)
 
@@ -26,22 +27,39 @@ def testimonials():
     """Testimonials page"""
     return render_template('testimonials.html', testimonials=TESTIMONIALS)
 
+def _field(data, key):
+    """Pull one form field as a trimmed string.
+
+    JSON gives callers full control of the value's type, so a dict or list
+    here used to raise AttributeError on .strip() and return a 500. Anything
+    that is not a string is rejected as empty and fails validation normally.
+    """
+    value = data.get(key, '')
+    if not isinstance(value, str):
+        return ''
+    return value.strip()
+
+
 @main_bp.route('/contact', methods=['GET', 'POST'])
+@limiter.limit('5 per hour; 2 per minute', methods=['POST'])
 def contact():
     """Contact page and form submission"""
     if request.method == 'POST':
-        data = request.get_json(silent=True) or {}
+        data = request.get_json(silent=True)
+        if not isinstance(data, dict):
+            return jsonify({'success': False, 'error': 'Invalid request'}), 400
 
         form = ContactForm(
-            name=data.get('name', '').strip(),
-            email=data.get('email', '').strip(),
-            phone=data.get('phone', '').strip(),
-            subject=data.get('subject', '').strip(),
-            message=data.get('message', '').strip()
+            name=_field(data, 'name'),
+            email=_field(data, 'email'),
+            phone=_field(data, 'phone'),
+            subject=_field(data, 'subject'),
+            message=_field(data, 'message')
         )
 
-        if not form.is_valid():
-            return jsonify({'success': False, 'error': 'Please fill in all fields correctly'}), 400
+        error = form.validation_error()
+        if error:
+            return jsonify({'success': False, 'error': error}), 400
 
         # Send email
         success = send_email(form)
@@ -65,7 +83,8 @@ def send_email(form):
     if not conn:
         if current_app.config.get('DEBUG'):
             current_app.logger.info(
-                'ACS not configured; contact form submission: %s', form.to_dict()
+                'ACS not configured; contact form from %s (%d char message) not sent',
+                form.email, len(form.message)
             )
             return True
         current_app.logger.error(
@@ -144,13 +163,3 @@ def api_services():
 def api_testimonials():
     """API endpoint for testimonials"""
     return jsonify(TESTIMONIALS)
-
-@main_bp.errorhandler(404)
-def not_found(error):
-    """Handle 404 errors"""
-    return render_template('404.html'), 404
-
-@main_bp.errorhandler(500)
-def server_error(error):
-    """Handle 500 errors"""
-    return render_template('500.html'), 500

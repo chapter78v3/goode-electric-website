@@ -1,4 +1,5 @@
 """Data models for Goode Electric website"""
+import re
 
 # Service Categories
 SERVICES = [
@@ -80,18 +81,53 @@ TESTIMONIALS = [
 
 class ContactForm:
     """Model for contact form submissions"""
+
+    # Upper bounds on every field. Without these a single request could carry
+    # megabytes of text into an outbound email and into the logs.
+    MAX_LENGTHS = {
+        'name': 100,
+        'email': 254,      # RFC 5321 maximum address length
+        'phone': 32,
+        'subject': 200,
+        'message': 5000,
+    }
+    MIN_MESSAGE_LENGTH = 10
+    # Deliberately permissive: enough to reject junk that would make ACS
+    # reject the whole send, without policing exotic but legal addresses.
+    EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s.]+(\.[^@\s.]+)+$')
+
     def __init__(self, name, email, phone, subject, message):
         self.name = name
         self.email = email
         self.phone = phone
         self.subject = subject
         self.message = message
-    
+
+    def validation_error(self):
+        """Return a human-readable reason the form is invalid, or None."""
+        fields = {
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'subject': self.subject,
+            'message': self.message,
+        }
+        for field, value in fields.items():
+            if not value:
+                return 'Please fill in all fields correctly'
+            if len(value) > self.MAX_LENGTHS[field]:
+                return f'{field.capitalize()} is too long (max {self.MAX_LENGTHS[field]} characters)'
+        if len(self.message) <= self.MIN_MESSAGE_LENGTH:
+            return 'Please provide a longer message'
+        if not self.EMAIL_RE.match(self.email):
+            return 'Please enter a valid email address'
+        return None
+
     def is_valid(self):
         """Validate form data"""
-        return (self.name and self.email and self.phone and 
-                self.subject and self.message and len(self.message) > 10)
-    
+        return self.validation_error() is None
+
+
     def to_dict(self):
         """Convert to dictionary"""
         return {
